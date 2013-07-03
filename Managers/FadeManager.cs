@@ -5,8 +5,8 @@ using System.Collections;
  * 
  * Script - FadeManager
  * 
- * This is a manager class that will fade in and out screen based on
- * the GUI alpha.
+ * This is a manager class that will fade in and out the screen based
+ * on the GUI alpha.
  * 
  * Use - to use this manager, attach it to an empty game object in the
  * scene. Call it through its singleton instance proptery.

@@ -30,7 +30,8 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
 		}
 	}
 	
-	void OnDestroy() {
+	protected virtual void OnDestroy() {
+		Debug.Log("Destroying " + gameObject.name);
 		instance = null;
 	}
 }
