@@ -1,0 +1,61 @@
+using UnityEngine;
+using System.Collections;
+
+[RequireComponent (typeof(CharacterMotor))]
+[AddComponentMenu ("Character/FPS Input Controller")]
+public class FPSInputController : MonoBehaviour {
+	
+	private CharacterMotor motor;
+	private Vector3 _playerDirection;
+	private bool _isMoving;
+	
+	public Vector3 PlayerDirection
+	{
+		get { return _playerDirection; }
+	}
+	
+	public bool IsMoving
+	{
+		get { return _isMoving; }
+	}
+	
+	void Awake()
+	{
+		motor = GetComponent<CharacterMotor>();
+	}
+	
+	void Update()
+	{
+		// Get the input vector from kayboard or analog stick
+		// trying raw input for a little better control
+		Vector3 directionVector = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+		_playerDirection = directionVector;
+	
+		if (directionVector != Vector3.zero)
+		{
+			_isMoving = true;
+			// Get the length of the directon vector and then normalize it
+			// Dividing by the length is cheaper than normalizing when we already have the length anyway
+			float directionLength = directionVector.magnitude;
+			directionVector = directionVector / directionLength;
+			
+			// Make sure the length is no bigger than 1
+			directionLength = Mathf.Min(1, directionLength);
+			
+			// Make the input vector more sensitive towards the extremes and less sensitive in the middle
+			// This makes it easier to control slow speeds when using analog sticks
+			directionLength = directionLength * directionLength;
+			
+			// Multiply the normalized direction vector by the modified length
+			directionVector = directionVector * directionLength;
+		}
+		else
+		{
+			_isMoving = false;
+		}
+	
+		// Apply the direction to the CharacterMotor
+		motor.inputMoveDirection = transform.rotation * directionVector;
+		motor.inputJump = Input.GetButton("Jump");
+	}
+}
